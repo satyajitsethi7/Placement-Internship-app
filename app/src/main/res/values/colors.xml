@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="sign_in">#111827</color>
+    <color name="transparent">#00000000</color>
+    <color name="ourblue">#0066FF</color>
+    <color name="small_text">#64748B</color>
+    <color name="iconedittext">#9CA3AF</color>
+    <color name="interview">#10B981</color>
+    <color name="rejected">#EF4444</color>
+    <color name="offer">#6366F1</color>
+</resources>

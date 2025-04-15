@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "369501736307",
+    "project_id": "skillproject-6b219",
+    "storage_bucket": "skillproject-6b219.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:369501736307:android:1a57a8dacd47ece545c906",
+        "android_client_info": {
+          "package_name": "com.example.placementproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8zABFEzGM9fT2gRjYAlXKTKM9NxOCcO4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
