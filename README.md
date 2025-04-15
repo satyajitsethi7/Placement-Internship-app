@@ -16,7 +16,7 @@ An Android app built to help students track their job and internship application
 
 ## 🛠️ Built With
 
-- **Kotlin**  
+- **Java**  
 - **Android (XML Layouts, Fragments)**  
 - **Firebase Realtime Database**  
 - **SharedPreferences**  
