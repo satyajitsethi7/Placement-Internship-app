@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/sign_up">
+        android:id="@+id/sign_up_layout">
 
         <TextView
             android:id="@+id/textView"
@@ -23,7 +23,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.17000002" />
+            app:layout_constraintVertical_bias="0.1" />
 
         <TextView
             android:id="@+id/txtheading"
@@ -35,15 +35,57 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
+        <RadioGroup
+            android:id="@+id/UserRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/background_edittext"
+            android:orientation="horizontal"
+            android:padding="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtheading">
+
+            <RadioButton
+                android:id="@+id/studentbtn"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="50dp"
+                android:background="@drawable/userselector"
+                android:button="@android:color/transparent"
+                android:checked="true"
+                android:text="Student"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/adminbtn"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="50dp"
+                android:background="@drawable/userselector"
+                android:button="@android:color/transparent"
+                android:text="Admin"
+                android:textAlignment="center"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+        </RadioGroup>
+
         <EditText
             android:id="@+id/fullname"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:background="@drawable/background_edittext"
-            android:drawableLeft="@drawable/fullnameicon"
+            android:drawableStart="@drawable/fullnameicon"
             android:drawablePadding="12dp"
             android:ems="10"
             android:hint="Full name"
@@ -54,7 +96,7 @@
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtheading" />
+            app:layout_constraintTop_toBottomOf="@+id/UserRadioGroup" />
 
 
         <EditText
@@ -65,7 +107,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:background="@drawable/background_edittext"
-            android:drawableLeft="@drawable/email_icon"
+            android:drawableStart="@drawable/email_icon"
             android:drawablePadding="12dp"
             android:ems="10"
             android:hint="Email id"
@@ -86,7 +128,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:background="@drawable/background_edittext"
-            android:drawableLeft="@drawable/callicon"
+            android:drawableStart="@drawable/callicon"
             android:drawablePadding="12dp"
             android:ems="10"
             android:hint="Mobile"
@@ -115,7 +157,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/background_edittext"
-                android:drawableLeft="@drawable/pw_lock_icon"
+                android:drawableStart="@drawable/pw_lock_icon"
                 android:drawablePadding="12dp"
                 android:ems="10"
                 android:hint="Password"

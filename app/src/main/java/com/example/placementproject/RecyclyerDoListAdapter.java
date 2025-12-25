@@ -1,16 +1,13 @@
-
 package com.example.placementproject;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -47,9 +44,11 @@ public class RecyclyerDoListAdapter extends RecyclerView.Adapter<RecyclyerDoList
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
         DataClass model = arrayList.get(position);
-        holder.jobpreference.setText(model.getEdtJobPreference());
-        holder.companyname.setText(model.getEdtCompanyName());
-        holder.link.setText(model.getEdtLink());
+        
+        holder.jobpreference.setText(model.getEdtJobPreference() != null ? model.getEdtJobPreference() : "No Title");
+        holder.companyname.setText(model.getEdtCompanyName() != null ? model.getEdtCompanyName() : "No Company");
+        holder.link.setText(model.getEdtLink() != null ? model.getEdtLink() : "No Link");
+        holder.dateText.setText(model.getEdtDate() != null ? model.getEdtDate() : "No Date");
 
         holder.llRow.setOnClickListener(v -> showUpdateDialog(model, position));
         holder.llRow.setOnLongClickListener(v -> {
@@ -72,8 +71,9 @@ public class RecyclyerDoListAdapter extends RecyclerView.Adapter<RecyclyerDoList
         edtJobPreference.setText(model.getEdtJobPreference());
         edtCompanyName.setText(model.getEdtCompanyName());
         edtLink.setText(model.getEdtLink());
-        updatetext.setText("Update Task");
+        updatetext.setText("Update Job");
         btnAdd.setText("Update");
+        
         btnAdd.setOnClickListener(v -> {
             String job = edtJobPreference.getText().toString().trim();
             String company = edtCompanyName.getText().toString().trim();
@@ -84,51 +84,47 @@ public class RecyclyerDoListAdapter extends RecyclerView.Adapter<RecyclyerDoList
                 return;
             }
 
-            // Get current date
             SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
             String currentDate = sdf.format(new Date());
 
             DataClass updatedData = new DataClass(job, company, link, currentDate);
+            updatedData.setKey(model.getKey()); // Keep the same key
 
-//            FirebaseDatabase.getInstance().getReference("Jobs and Internships")
-//                    .child(model.getEdtJobPreference()) // Remove old data
-//                    .removeValue();
-            String jobKey = FirebaseDatabase.getInstance().getReference("Jobs and Internships").push().getKey();
-            FirebaseDatabase.getInstance().getReference("Jobs and Internships")
-                    .child(jobKey) // Use the generated unique key
-                    .setValue(updatedData);
-
-
-            FirebaseDatabase.getInstance().getReference("Jobs and Internships")
-                    .child(job) // Add updated data
-                    .setValue(updatedData)
-                    .addOnSuccessListener(unused -> {
-                        arrayList.set(position, updatedData);
-                        notifyItemChanged(position);
-                        Toast.makeText(context, "Updated successfully", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                    })
-                    .addOnFailureListener(e ->
-                            Toast.makeText(context, "Update failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            if (model.getKey() != null) {
+                FirebaseDatabase.getInstance().getReference("Jobs and Internships")
+                        .child(model.getKey())
+                        .setValue(updatedData)
+                        .addOnSuccessListener(unused -> {
+                            dialog.dismiss();
+                            Toast.makeText(context, "Updated successfully", Toast.LENGTH_SHORT).show();
+                        })
+                        .addOnFailureListener(e ->
+                                Toast.makeText(context, "Update failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            } else {
+                Toast.makeText(context, "Cannot update: key is null", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
         });
-
 
         dialog.show();
     }
 
     private void showDeleteConfirmation(DataClass model, int position) {
+        if (model.getKey() == null) {
+            Toast.makeText(context, "Cannot delete: key is null", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         new AlertDialog.Builder(context)
-                .setTitle("Delete Task")
-                .setMessage("Are you sure you want to delete this?")
+                .setTitle("Delete Job")
+                .setMessage("Are you sure you want to delete this job?")
                 .setIcon(R.drawable.baseline_delete_24)
                 .setPositiveButton("No", null)
                 .setNegativeButton("Yes", (dialog, which) -> {
                     FirebaseDatabase.getInstance().getReference("Jobs and Internships")
-                            .child(model.getEdtJobPreference())
+                            .child(model.getKey())
                             .removeValue()
                             .addOnSuccessListener(unused -> {
-                                arrayList.remove(position);
-                                notifyItemRemoved(position);
                                 Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show();
                             })
                             .addOnFailureListener(e ->
@@ -143,7 +139,7 @@ public class RecyclyerDoListAdapter extends RecyclerView.Adapter<RecyclyerDoList
     }
 
     public static class viewHolder extends RecyclerView.ViewHolder {
-        TextView jobpreference, companyname, link;
+        TextView jobpreference, companyname, link, dateText;
         LinearLayout llRow;
 
         public viewHolder(@NonNull View itemView) {
@@ -151,8 +147,8 @@ public class RecyclyerDoListAdapter extends RecyclerView.Adapter<RecyclyerDoList
             jobpreference = itemView.findViewById(R.id.jobpreference);
             companyname = itemView.findViewById(R.id.companyname);
             link = itemView.findViewById(R.id.link);
+            dateText = itemView.findViewById(R.id.dateText);
             llRow = itemView.findViewById(R.id.llRow);
         }
     }
 }
-

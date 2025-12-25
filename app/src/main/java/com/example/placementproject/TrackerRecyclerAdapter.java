@@ -1,21 +1,15 @@
-
 package com.example.placementproject;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -48,40 +42,25 @@ public class TrackerRecyclerAdapter extends RecyclerView.Adapter<TrackerRecycler
 
         holder.companyname.setText(item.getCompanyname());
         holder.jobstext.setText(item.getJobstext());
-        holder.status.setText(item.getStatus());
-        holder.appliedtime.setText("Applied on: "+item.getAppliedtime()); // Binds date
-
-
-        // Color for status background
-        GradientDrawable background = (GradientDrawable) holder.status.getBackground();
-        switch (item.getStatus()) {
-            case "Latest":
-                background.setColor(ContextCompat.getColor(context, R.color.interview));
-                break;
-            case "Internship":
-                background.setColor(ContextCompat.getColor(context, R.color.offer));
-                break;
-            default:
-                background.setColor(ContextCompat.getColor(context, R.color.ourblue));
-                break;
+        
+        // Change the prefix from "Applied on: " to "Listed on: " or similar if needed
+        if (item.getAppliedtime() != null && !item.getAppliedtime().isEmpty()) {
+            holder.appliedtime.setText("Listed on: " + item.getAppliedtime());
+        } else {
+            holder.appliedtime.setText("");
         }
-//        holder.itemView.setTag(item);
-
-        // Set the link click handler on the text view
 
         holder.jobstext.setOnClickListener(v -> {
             Log.d("TrackerRecyclerAdapter", "Job Preference clicked at position: " + position);
-            String link = item.getEdtlink();  // Get the link from the item
+            String link = item.getEdtlink();
 
             if (link != null && !link.trim().isEmpty()) {
-                // Open the link in the browser
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
                 context.startActivity(intent);
             } else {
                 Log.d("TrackerRecyclerAdapter", "No link available to apply for the job.");
             }
         });
-
     }
 
     @Override
@@ -90,16 +69,13 @@ public class TrackerRecyclerAdapter extends RecyclerView.Adapter<TrackerRecycler
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView companyname, jobstext, status, appliedtime;
+        TextView companyname, jobstext, appliedtime;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             companyname = itemView.findViewById(R.id.companyname);
             jobstext = itemView.findViewById(R.id.jobstext);
-            status = itemView.findViewById(R.id.status);
             appliedtime = itemView.findViewById(R.id.appliedtime);
-
-        }
         }
     }
-
+}

@@ -4,9 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
@@ -20,38 +17,42 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class LoginAndSignup extends AppCompatActivity {
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Session management: check if user is already logged in
+        SharedPreferences pref = getSharedPreferences("login", MODE_PRIVATE);
+        // flag=false means logged in, flag=true (default) means logged out
+        boolean isLoggedIn = !pref.getBoolean("flag", true); 
+        String role = pref.getString("role", "").trim();
+
+        if (isLoggedIn && !role.isEmpty()) {
+            Intent intent;
+            if ("admin".equalsIgnoreCase(role)) {
+                intent = new Intent(LoginAndSignup.this, AdminActivity.class);
+            } else {
+                intent = new Intent(LoginAndSignup.this, MainActivity.class);
+            }
+            startActivity(intent);
+            finish();
+            return;
+        }
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login_and_signup);
 
-
-
-        if(savedInstanceState==null){
-            FragmentManager fm=getSupportFragmentManager();
-            FragmentTransaction ft=fm.beginTransaction();
-            ft.replace(R.id.loginandsignupmain, new LoginFragment());
-            ft.commit();
-            Log.d("LoginAndSigup", "Ok");
-//            SharedPreferences pref=getSharedPreferences("login", MODE_PRIVATE);
-//            SharedPreferences.Editor editor=pref.edit();
-//            editor.putBoolean("flag", true);
-//            editor.apply();
-
-//            Intent iMain=new Intent(LoginAndSignup.this,MainActivity.class);
-//            startActivity(iMain);
+        if (savedInstanceState == null) {
+            switchFragment(new LoginFragment());
         }
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                Fragment currentFreagment=getSupportFragmentManager().findFragmentById(R.id.main);
-                if(currentFreagment instanceof SignupFragment)
-                {
+                Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.loginandsignupmain);
+                if (currentFragment instanceof SignupFragment) {
                     switchFragment(new LoginFragment());
-                }else {
+                } else {
                     finish();
                 }
             }
@@ -63,12 +64,11 @@ public class LoginAndSignup extends AppCompatActivity {
             return insets;
         });
     }
-    public void switchFragment(Fragment fragment)
-    {
-        FragmentManager fm=getSupportFragmentManager();
-        FragmentTransaction ft=fm.beginTransaction();
+
+    public void switchFragment(Fragment fragment) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.loginandsignupmain, fragment);
         ft.commit();
     }
-
 }

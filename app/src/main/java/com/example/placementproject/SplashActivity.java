@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,22 +22,28 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                SharedPreferences pref=getSharedPreferences("login", MODE_PRIVATE);
-                Boolean check=pref.getBoolean("flag",false);
+                SharedPreferences pref = getSharedPreferences("login", MODE_PRIVATE);
+                // flag=false means logged in, flag=true means logged out
+                boolean isLoggedOut = pref.getBoolean("flag", true);
+                String role = pref.getString("role", "");
 
-                Intent inext;
-                if(check){
-//                    Log.d("F", String.valueOf(check));
-                    inext=new Intent(SplashActivity.this,LoginAndSignup.class);
-                }else{
-//                    Log.d("D", "Ok");
-                    inext=new Intent(SplashActivity.this,MainActivity.class);
-//                    inext.putExtra("direct_to_login", true);
+                Intent intent;
+                if (isLoggedOut) {
+                    // Not logged in, go to Login screen
+                    intent = new Intent(SplashActivity.this, LoginAndSignup.class);
+                } else {
+                    // Logged in, check role
+                    if ("admin".equalsIgnoreCase(role)) {
+                        intent = new Intent(SplashActivity.this, AdminActivity.class);
+                    } else {
+                        intent = new Intent(SplashActivity.this, MainActivity.class);
+                    }
                 }
-                startActivity(inext);
+                
+                startActivity(intent);
                 finish();
             }
-        },2000);
+        }, 2000);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

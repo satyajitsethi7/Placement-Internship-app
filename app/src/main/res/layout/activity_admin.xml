@@ -7,45 +7,74 @@
     android:layout_height="match_parent"
     tools:context=".AdminActivity">
 
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Admin Panel"
+            android:textColor="@color/ourblue"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/btnLogout"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/baseline_logout_24"
+            android:contentDescription="Logout" />
+    </LinearLayout>
+
     <ImageView
+        android:id="@+id/emptytasks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:src="@drawable/empty_tasks"
-        android:id="@+id/emptytasks"
-        android:layout_gravity="center"
-        android:contentDescription="Empty tasks"/>
+        android:visibility="gone"
+        android:contentDescription="Empty tasks" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/topBar"
         android:orientation="vertical">
+
         <TextView
+            android:id="@+id/Tasks"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/Tasks"
-            android:textStyle="bold"
+            android:layout_margin="11dp"
             android:text="Internships and Placements"
-            android:textSize="30sp"
             android:textColor="#000000"
-            android:layout_margin="11dp"/>
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/textlist"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/textlist"/>
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnAddDialog"
+        style="@style/Widget.Design.FloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btnAddDialog"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        app:rippleColor="#C3FAF7"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="30dp"
         android:src="@drawable/baseline_add_24"
         app:backgroundTint="#03A9F4"
-        app:shapeAppearanceOverlay="@style/fab_rounded"
-        style="@style/Widget.Design.FloatingActionButton"
-        android:layout_margin="30dp"/>
+        app:rippleColor="#C3FAF7"
+        app:shapeAppearanceOverlay="@style/fab_rounded" />
 
 </RelativeLayout>

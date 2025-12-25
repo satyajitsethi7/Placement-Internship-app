@@ -28,13 +28,6 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <Spinner
-            android:id="@+id/filter"
-            android:layout_width="20dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:spinnerMode="dropdown" />
-
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

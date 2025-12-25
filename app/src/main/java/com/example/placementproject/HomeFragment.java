@@ -1,14 +1,10 @@
 package com.example.placementproject;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -29,7 +25,6 @@ public class HomeFragment extends Fragment{
     private TrackerRecyclerAdapter trackerRecyclerAdapter;
     private ArrayList<list_of_tracker> arrayListoftracker;
     private DatabaseReference databaseReference;
-    private Spinner spinner;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,7 +32,6 @@ public class HomeFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         recyclerView = view.findViewById(R.id.statuslist);
-        spinner = view.findViewById(R.id.filter);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         arrayListoftracker = new ArrayList<>();
@@ -49,15 +43,6 @@ public class HomeFragment extends Fragment{
 
         fetchDataFromFirebase();
 
-        // Spinner setup
-        ArrayList<String> filterid = new ArrayList<>();
-        filterid.add("Latest");
-        filterid.add("Internships");
-        filterid.add("Jobs");
-
-        ArrayAdapter<String> spinneradapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, filterid);
-        spinner.setAdapter(spinneradapter);
-
         return view;
     }
 
@@ -67,17 +52,23 @@ public class HomeFragment extends Fragment{
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 arrayListoftracker.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    // Log the raw data to see what Firebase returns
+                    Log.d("FirebaseData", "Value: " + dataSnapshot.getValue());
+                    
                     DataClass data = dataSnapshot.getValue(DataClass.class);
 
                     if (data != null) {
-                        // Format: (company, job, category/status, date)
                         String edtlink = data.getEdtLink();
+                        String edtDate = data.getEdtDate(); // Get the date from Firebase
+                        
+                        Log.d("FirebaseData", "Fetched Date: " + edtDate);
+
+                        // Format: (company, job, appliedtime, edtlink)
                         list_of_tracker tracker = new list_of_tracker(
                                 data.getEdtCompanyName(),
                                 data.getEdtJobPreference(),
-                                "Latest", // Placeholder for status - update as needed
-                                data.getAppliedDate(), // Make sure DataClass has getDate()
-                                edtlink // Add edtlink
+                                edtDate != null ? edtDate : "", 
+                                edtlink
                         );
                         arrayListoftracker.add(tracker);
                     }
@@ -87,9 +78,8 @@ public class HomeFragment extends Fragment{
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Handle error if needed
+                Log.e("FirebaseData", "Error: " + error.getMessage());
             }
         });
     }
 }
-

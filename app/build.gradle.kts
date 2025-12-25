@@ -48,13 +48,15 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.firebase.database)
     implementation(libs.firebase.storage)
+    implementation(libs.firebase.auth)
     implementation(libs.androidx.media3.common)
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.core.splashscreen)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
     implementation("com.google.firebase:firebase-analytics")
-    implementation ("com.google.firebase:firebase-database:21.0.0")
-    implementation ("com.google.firebase:firebase-storage:21.0.1")
+    implementation("com.android.volley:volley:1.2.1")
 
     androidTestImplementation(libs.espresso.core)
 }
