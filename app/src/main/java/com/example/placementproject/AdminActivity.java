@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -72,6 +73,7 @@ public class AdminActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = pref.edit();
                 editor.putBoolean("flag", true); // Logged out
                 editor.putString("role", "");
+                editor.putString("username", "");
                 editor.apply();
 
                 Intent intent = new Intent(AdminActivity.this, LoginAndSignup.class);

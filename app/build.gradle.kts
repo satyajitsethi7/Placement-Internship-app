@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.androidx.media3.common)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.core.splashscreen)
+    implementation(libs.glide)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     implementation(platform("com.google.firebase:firebase-bom:33.12.0"))

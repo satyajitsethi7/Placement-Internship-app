@@ -158,12 +158,14 @@ public class LoginFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     String roleFromDB = snapshot.child("role").getValue(String.class);
+                    String nameFromDB = snapshot.child("fullname").getValue(String.class);
                     if (roleFromDB != null && roleFromDB.equalsIgnoreCase(selectedRole)) {
                         
                         SharedPreferences pref = requireActivity().getSharedPreferences("login", MODE_PRIVATE);
                         SharedPreferences.Editor editor = pref.edit();
                         editor.putBoolean("flag", false); // Means logged in
                         editor.putString("role", roleFromDB);
+                        editor.putString("username", nameFromDB);
                         editor.apply();
 
                         Intent intent;

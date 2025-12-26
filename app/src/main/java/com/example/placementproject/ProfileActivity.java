@@ -1,215 +1,67 @@
-//package com.example.placementproject;
-//
-//import android.content.Intent;
-//import android.content.SharedPreferences;
-//import android.database.Cursor;
-//import android.net.Uri;
-//import android.os.Bundle;
-//import android.provider.MediaStore;
-//import android.provider.OpenableColumns;
-//import android.widget.Button;
-//import android.widget.TextView;
-//import android.widget.Toast;
-//
-//import androidx.activity.EdgeToEdge;
-//import androidx.appcompat.app.AppCompatActivity;
-//import androidx.core.graphics.Insets;
-//import androidx.core.view.ViewCompat;
-//import androidx.core.view.WindowInsetsCompat;
-//
-//import android.util.Base64;
-//import com.android.volley.Request;
-//import com.android.volley.RequestQueue;
-//import com.android.volley.toolbox.StringRequest;
-//import com.android.volley.toolbox.Volley;
-//import org.json.JSONObject;
-//import java.io.InputStream;
-//
-//public class ProfileActivity extends AppCompatActivity {
-//
-//    private static final int PICK_IMAGE_REQUEST = 1;
-//    private Button logout, uploadResumeButton;
-//    private TextView atsScore, userName, selectedFileName;
-//    private Uri imageUri;
-//    private String apiKey = "K88841546488957"; // Replace with real key
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        EdgeToEdge.enable(this);
-//        setContentView(R.layout.activity_profile);
-//
-//        logout = findViewById(R.id.logout);
-//        uploadResumeButton = findViewById(R.id.uploadResumeButton);
-//        atsScore = findViewById(R.id.atsScore);
-//        userName = findViewById(R.id.userName);
-//        selectedFileName = findViewById(R.id.selectedFileName);
-//
-//        // Load name from SharedPreferences
-//        SharedPreferences pref = getSharedPreferences("login", MODE_PRIVATE);
-//        String name = pref.getString("username", "User Name");
-//        userName.setText(name);
-//
-//        logout.setOnClickListener(v -> {
-//            SharedPreferences.Editor editor = pref.edit();
-//            editor.putBoolean("flag", true);
-//            editor.apply();
-//            startActivity(new Intent(ProfileActivity.this, LoginAndSignup.class));
-//            finish();
-//        });
-//
-//        uploadResumeButton.setOnClickListener(v -> openImagePicker());
-//
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-//            return insets;
-//        });
-//    }
-//
-//
-//
-//    private void openImagePicker() {
-//        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//        startActivityForResult(intent, PICK_IMAGE_REQUEST);
-//    }
-//
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-//            imageUri = data.getData();
-//
-//            String fileName = getFileNameFromUri(imageUri);
-//            selectedFileName.setText("File Selected: " + fileName);
-//            Toast.makeText(this, "Resume selected successfully", Toast.LENGTH_SHORT).show();
-//
-//            extractTextFromImage(imageUri); // 👈 Start OCR processing
-//        }
-//    }
-//
-//
-//    private String getFileNameFromUri(Uri uri) {
-//        String result = "Unknown";
-//        if (uri.getScheme().equals("content")) {
-//            try (Cursor cursor = getContentResolver().query(uri, null, null, null, null)) {
-//                if (cursor != null && cursor.moveToFirst()) {
-//                    int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-//                    if (nameIndex != -1) {
-//                        result = cursor.getString(nameIndex);
-//                    }
-//                }
-//            }
-//        } else if (uri.getScheme().equals("file")) {
-//            result = uri.getLastPathSegment();
-//        }
-//        return result;
-//    }
-//    private void extractTextFromImage(Uri imageUri) {
-//        try {
-//            InputStream inputStream = getContentResolver().openInputStream(imageUri);
-//            byte[] imageBytes = new byte[inputStream.available()];
-//            inputStream.read(imageBytes);
-//
-//            // Convert image to Base64
-//            String encodedImage = Base64.encodeToString(imageBytes, Base64.NO_WRAP);
-//
-//            RequestQueue queue = Volley.newRequestQueue(this);
-//            String url = "https://api.ocr.space/parse/image";
-//
-//            StringRequest request = new StringRequest(Request.Method.POST, url, response -> {
-//                try {
-//                    JSONObject jsonObject = new JSONObject(response);
-//                    String extractedText = jsonObject.getJSONArray("ParsedResults")
-//                            .getJSONObject(0)
-//                            .getString("ParsedText");
-//
-//                    calculateATSScore(extractedText);
-//                } catch (Exception e) {
-//                    Toast.makeText(this, "Failed to extract text", Toast.LENGTH_SHORT).show();
-//                }
-//            }, error -> {
-//                Toast.makeText(this, "OCR API failed", Toast.LENGTH_SHORT).show();
-//            }) {
-//                @Override
-//                public byte[] getBody() {
-//                    String data = "base64Image=data:image/jpeg;base64," + encodedImage +
-//                            "&language=eng&apikey=" + apiKey;
-//                    return data.getBytes();
-//                }
-//
-//                @Override
-//                public String getBodyContentType() {
-//                    return "application/x-www-form-urlencoded";
-//                }
-//            };
-//
-//            queue.add(request);
-//
-//        } catch (Exception e) {
-//            Toast.makeText(this, "Image error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//        }
-//    }
-//    private void calculateATSScore(String text) {
-//        int score = 0;
-//        int total = 6;
-//
-//        String[] keywords = {"Java", "C#", "Android", "Firebase", "OOP", "SQL"};
-//
-//        for (String keyword : keywords) {
-//            if (text.toLowerCase().contains(keyword.toLowerCase())) {
-//                score++;
-//            }
-//        }
-//
-//        int percentage = (score * 100) / total;
-//        atsScore.setText("ATS Compatibility Score: " + percentage + "%");
-//    }
-//
-//}
 package com.example.placementproject;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.database.Cursor;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import org.json.JSONObject;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private static final int PICK_IMAGE_REQUEST = 1;
+    private static final int PICK_RESUME_REQUEST = 1;
+    private static final int PICK_PROFILE_IMAGE_REQUEST = 2;
 
     private Button logout, uploadResumeButton;
     private TextView atsScore, userName, selectedFileName;
-    private Uri imageUri;
-    private String apiKey = "K88841546488957"; // Replace with your OCR.Space API key
+    private ImageView profileImage;
+    private String apiKey = "K88841546488957";
+
+    private FirebaseAuth mAuth;
+    private DatabaseReference userRef;
+    private StorageReference storageRef;
 
     private final String[] keywords = {
             "Java", "C++", "C#", "HTML", "CSS", "JavaScript",
-            "React", "Firebase", "Android", "OOP", "SQL", "ASP.NET"
+            "React", "Firebase", "Android", "OOP", "SQL", "ASP.NET",
+            "Python", "Kotlin", "Git", "REST API", "Agile", "Problem Solving"
     };
 
     @Override
@@ -218,25 +70,43 @@ public class ProfileActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_profile);
 
+        mAuth = FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() == null) {
+            startActivity(new Intent(this, LoginAndSignup.class));
+            finish();
+            return;
+        }
+
+        String userId = mAuth.getCurrentUser().getUid();
+        userRef = FirebaseDatabase.getInstance().getReference("Users").child(userId);
+        storageRef = FirebaseStorage.getInstance().getReference("ProfileImages").child(userId + ".jpg");
+
         logout = findViewById(R.id.logout);
         uploadResumeButton = findViewById(R.id.uploadResumeButton);
         atsScore = findViewById(R.id.atsScore);
         userName = findViewById(R.id.userName);
         selectedFileName = findViewById(R.id.selectedFileName);
+        profileImage = findViewById(R.id.profileImage);
 
         SharedPreferences pref = getSharedPreferences("login", MODE_PRIVATE);
         String name = pref.getString("username", "User Name");
         userName.setText(name);
 
+        loadProfileImage();
+
+        profileImage.setOnClickListener(v -> openProfileImagePicker());
+
         logout.setOnClickListener(v -> {
+            mAuth.signOut();
             SharedPreferences.Editor editor = pref.edit();
             editor.putBoolean("flag", true);
+            editor.putString("username", "");
             editor.apply();
             startActivity(new Intent(ProfileActivity.this, LoginAndSignup.class));
             finish();
         });
 
-        uploadResumeButton.setOnClickListener(v -> openImagePicker());
+        uploadResumeButton.setOnClickListener(v -> openResumePicker());
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -245,25 +115,71 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void openImagePicker() {
+    private void openResumePicker() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        startActivityForResult(intent, PICK_RESUME_REQUEST);
+    }
+
+    private void openProfileImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, PICK_PROFILE_IMAGE_REQUEST);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            imageUri = data.getData();
-
-            // Display file name or path
-            String path = getFileNameFromUri(imageUri);
-            selectedFileName.setText("Selected: " + path);
-
-            // Start OCR and ATS scoring
-            runOCRAndScore(imageUri);
+        if (resultCode == RESULT_OK && data != null && data.getData() != null) {
+            if (requestCode == PICK_RESUME_REQUEST) {
+                Uri resumeUri = data.getData();
+                String path = getFileNameFromUri(resumeUri);
+                selectedFileName.setText("Selected: " + path);
+                runOCRAndScore(resumeUri);
+            } else if (requestCode == PICK_PROFILE_IMAGE_REQUEST) {
+                Uri profileUri = data.getData();
+                uploadProfileImage(profileUri);
+            }
         }
+    }
+
+    private void uploadProfileImage(Uri uri) {
+        ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setMessage("Uploading profile picture...");
+        dialog.setCancelable(false);
+        dialog.show();
+
+        storageRef.putFile(uri).addOnSuccessListener(taskSnapshot -> {
+            storageRef.getDownloadUrl().addOnSuccessListener(downloadUri -> {
+                String imageUrl = downloadUri.toString();
+                userRef.child("profileImageUrl").setValue(imageUrl).addOnCompleteListener(task -> {
+                    dialog.dismiss();
+                    if (task.isSuccessful()) {
+                        Glide.with(ProfileActivity.this).load(imageUrl).into(profileImage);
+                        Toast.makeText(ProfileActivity.this, "Profile picture updated!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+        }).addOnFailureListener(e -> {
+            dialog.dismiss();
+            Toast.makeText(ProfileActivity.this, "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void loadProfileImage() {
+        userRef.child("profileImageUrl").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String url = snapshot.getValue(String.class);
+                    if (url != null && !url.isEmpty() && !isFinishing()) {
+                        Glide.with(ProfileActivity.this).load(url).into(profileImage);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
     }
 
     private String getFileNameFromUri(Uri uri) {
@@ -289,72 +205,95 @@ public class ProfileActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.show();
 
-        new Thread(() -> {
-            try {
-                InputStream inputStream = getContentResolver().openInputStream(uri);
-                ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-                byte[] buffer = new byte[1024];
-                int len;
-                while ((len = inputStream.read(buffer)) != -1) {
-                    byteBuffer.write(buffer, 0, len);
-                }
-
-                String base64Image = Base64.encodeToString(byteBuffer.toByteArray(), Base64.NO_WRAP);
-
-                URL url = new URL("https://api.ocr.space/parse/image");
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("apikey", apiKey);
-                conn.setDoOutput(true);
-                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-
-                String data = "base64Image=data:image/jpeg;base64," + base64Image +
-                        "&language=eng&isOverlayRequired=false";
-
-                OutputStream os = conn.getOutputStream();
-                os.write(data.getBytes());
-                os.flush();
-                os.close();
-
-                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                StringBuilder response = new StringBuilder();
-                String line;
-                while ((line = br.readLine()) != null) {
-                    response.append(line);
-                }
-                br.close();
-
-                JSONObject jsonResponse = new JSONObject(response.toString());
-                String parsedText = jsonResponse
-                        .getJSONArray("ParsedResults")
-                        .getJSONObject(0)
-                        .getString("ParsedText");
-
-                int score = calculateATSScore(parsedText);
-
-                runOnUiThread(() -> {
-                    atsScore.setText("ATS Compatibility Score: " + score + "%");
-                    dialog.dismiss();
-                });
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                runOnUiThread(() -> {
-                    atsScore.setText("Error analyzing resume");
-                    dialog.dismiss();
-                });
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = inputStream.read(buffer)) != -1) {
+                byteBuffer.write(buffer, 0, len);
             }
-        }).start();
+            // Using NO_WRAP to avoid newlines in the Base64 string
+            String base64Image = Base64.encodeToString(byteBuffer.toByteArray(), Base64.NO_WRAP);
+
+            RequestQueue queue = Volley.newRequestQueue(this);
+            String url = "https://api.ocr.space/parse/image";
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                    response -> {
+                        dialog.dismiss();
+                        Log.d("OCR_RESPONSE", response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            if (jsonObject.has("ParsedResults")) {
+                                JSONArray results = jsonObject.getJSONArray("ParsedResults");
+                                if (results.length() > 0) {
+                                    String parsedText = results.getJSONObject(0).getString("ParsedText");
+                                    if (parsedText == null || parsedText.trim().isEmpty()) {
+                                        atsScore.setText("ATS Compatibility Score: 0%\n(No readable text found)");
+                                    } else {
+                                        int score = calculateATSScore(parsedText);
+                                        atsScore.setText("ATS Compatibility Score: " + score + "%");
+                                    }
+                                } else {
+                                    atsScore.setText("OCR failed: No text found.");
+                                }
+                            } else if (jsonObject.has("ErrorMessage")) {
+                                JSONArray errorMsgs = jsonObject.getJSONArray("ErrorMessage");
+                                atsScore.setText("Error: " + errorMsgs.getString(0));
+                            } else {
+                                atsScore.setText("Analysis failed: Unknown response.");
+                            }
+                        } catch (Exception e) {
+                            Log.e("OCR", "Error parsing response", e);
+                            atsScore.setText("Error parsing result.");
+                        }
+                    },
+                    error -> {
+                        dialog.dismiss();
+                        Log.e("OCR", "Volley Error: " + error.toString());
+                        String message = "Network error. Please try again.";
+                        if (error.networkResponse != null && error.networkResponse.data != null) {
+                            message = new String(error.networkResponse.data);
+                        }
+                        atsScore.setText(message);
+                    }) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("apikey", apiKey);
+                    params.put("base64Image", "data:image/jpeg;base64," + base64Image);
+                    params.put("language", "eng");
+                    params.put("isOverlayRequired", "false");
+                    params.put("filetype", "JPG");
+                    return params;
+                }
+            };
+
+            // OCR.space can be slow, so we increase the timeout to 30 seconds
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                    30000,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+            queue.add(stringRequest);
+
+        } catch (Exception e) {
+            dialog.dismiss();
+            Log.e("OCR", "Setup Error", e);
+            atsScore.setText("Error setting up analysis.");
+        }
     }
 
     private int calculateATSScore(String text) {
+        if (text == null || text.isEmpty()) return 0;
         int matches = 0;
-        text = text.toLowerCase();
+        String lowerText = text.toLowerCase();
         for (String keyword : keywords) {
-            if (text.contains(keyword.toLowerCase())) {
+            if (lowerText.contains(keyword.toLowerCase())) {
                 matches++;
             }
         }
-        return (matches * 100) / keywords.length;
+        return (int) (((double) matches / keywords.length) * 100);
     }
 }
